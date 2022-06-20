@@ -1,4 +1,5 @@
 __pycache__/
 sparkify_airflow_env/
+env/
 *.env
 logs/

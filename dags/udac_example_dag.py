@@ -19,9 +19,9 @@ create_table_commands = {
 }
 
 dimension_query_table_commands = {
-    'users': SqlQueries.users_table_insert,
-    'songs': SqlQueries.songs_table_insert,
-    'artists': SqlQueries.artists_table_insert,
+    'users': SqlQueries.user_table_insert,
+    'songs': SqlQueries.song_table_insert,
+    'artists': SqlQueries.artist_table_insert,
     'time': SqlQueries.time_table_insert
 }
 
@@ -71,7 +71,7 @@ stage_events_to_redshift = StageToRedshiftOperator(
 stage_songs_to_redshift = StageToRedshiftOperator(
     task_id='stage_songs',
     dag=dag,
-    db_conn_id='redshift_conn',
+    db_conn_id='redshift',
     db_table='staging_songs',
     aws_conn_id='aws_credentials',
     s3_bucket='udacity-dend',
@@ -82,8 +82,9 @@ stage_songs_to_redshift = StageToRedshiftOperator(
 load_songplays_table = LoadFactOperator(
     task_id='load_songplays_fact_table',
     dag=dag,
-    postgres_conn_id='redshift',
-    sql=f'INSERT INTO public.songplays({SqlQueries.songplay_table_insert});'
+    db_conn_id='redshift',
+    db_table='songplays',
+    sql=SqlQueries.songplay_table_insert
 )
 
 tables_loaded_task = DummyOperator(task_id='tables_loaded', dag=dag)
@@ -92,7 +93,7 @@ for table_name in ['songs', 'artists', 'users', 'time']:
     load_dimension_table = LoadDimensionOperator(
         task_id=f'load_{table_name}_dim_table',
         dag=dag,
-        postgres_conn_id='redsfhit',
+        db_conn_id='redsfhit',
         db_table=table_name,
         mode='delete-load',
         sql=dimension_query_table_commands[table_name]

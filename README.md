@@ -65,6 +65,10 @@ The star schema was built and optimized for queries on song play analysis. It in
     
     start_time, hour, day, week, month, year, weekday
 
+## Airflow DAG
+
+![DAG preview](/images/dag.png)
+
 ## Steps to reproduce
 
 1. The solution was built using Python 3.8.5 and Apache Airflow 2.3.2. All dependencies are listed in `requirements.txt`.
@@ -76,9 +80,9 @@ To install them, you can run the following command:
 2. If you are running Apache Airflow on WSL, you might want to take a look at these instructions:
     - The first time you run Airflow, run: `airflow db init`
     - You may need to create an admin user, which can be done by running:
-        `airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin`
+        `airflow users create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin`
         This creates a user `admin` with password `admin`
-    - To start the scheduler, run: `airflow scheduler`
+    - To start the scheduler, run: `airflow scheduler -D`
     - To open the UI, run: `airflow webserver`
     Airflow should be running in http://localhost:8080
 
